@@ -6,8 +6,32 @@ on:
       - 'v*'
 
 jobs:
-  release:
+  syntax:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4', '8.5']
+
+    name: PHP ${{ matrix.php }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+
+      - name: Syntax Check
+        run: php -l clacks_overhead.php
+
+  release:
+    needs: syntax
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout
@@ -17,7 +41,7 @@ jobs:
         id: version
         run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
 
-      - name: Build ZIP with correct folder name
+      - name: Build release archives
         run: |
           mkdir -p clacks_overhead
           cp clacks_overhead.php composer.json LICENSE README.md CHANGELOG.md clacks_overhead/
