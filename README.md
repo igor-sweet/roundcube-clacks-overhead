@@ -25,6 +25,10 @@ for other software as well as background information to this plugin.
 $config['plugins'] = ['clacks_overhead'];
 ```
 
+## Features
+
+- Adds `X-Clacks-Overhead: GNU Terry Pratchett` to all outgoing emails
+- Displays an animated Clacks tower indicator in the message header when receiving mail that carries the header — click to learn more about the project
 ---
 
 ## Disclaimer

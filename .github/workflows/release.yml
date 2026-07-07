@@ -44,7 +44,8 @@ jobs:
       - name: Build release archives
         run: |
           mkdir -p clacks_overhead
-          cp clacks_overhead.php composer.json LICENSE README.md CHANGELOG.md clacks_overhead/
+          cp clacks_overhead.php composer.json LICENSE README.md CHANGELOG.md clacks_overhead.js clacks_overhead/
+          cp -r skins clacks_overhead/
           zip -r clacks_overhead-${{ steps.version.outputs.VERSION }}.zip clacks_overhead/
           tar -czf clacks_overhead-${{ steps.version.outputs.VERSION }}.tar.gz clacks_overhead/
 

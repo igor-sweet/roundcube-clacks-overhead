@@ -1,0 +1,51 @@
+/* Clacks Overhead — widget fixed to top-right of the header block */
+
+.header-content {
+    position: relative;
+}
+
+a.clacks-overhead {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    opacity: 0.7;
+    text-decoration: none;
+}
+
+a.clacks-overhead:hover {
+    opacity: 1;
+}
+
+/* 2 columns, 3 rows */
+.clacks-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 2px;
+}
+
+.clacks-panel {
+    width: 10px;
+    height: 10px;
+    border-radius: 1px;
+    background: #555;
+    transition: background 0.12s ease, box-shadow 0.12s ease;
+}
+
+.clacks-panel.on {
+    background: #f5c842;
+    box-shadow: 0 0 3px #f5c84288;
+}
+
+.clacks-label {
+    font-size: 9px;
+    font-family: monospace;
+    color: #888;
+    letter-spacing: 0.05em;
+    min-width: 8px;
+    text-align: center;
+}
