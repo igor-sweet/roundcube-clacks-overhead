@@ -1,0 +1,53 @@
+########################################################################
+# E2E stack for clacks_overhead: GreenMail (fake SMTP+IMAP) + Roundcube
+# with the plugin mounted straight from the working tree.
+#
+# Usage (from this directory):
+#   cp .env.example .env      # first time only, then adjust as needed
+#   docker compose up -d
+#   ./fixtures/inject-mail.sh positive
+#   open http://localhost:8080
+#   docker compose down -v
+#
+# Roundcube version under test is controlled by ROUNDCUBE_TAG in .env,
+# so the same compose file is reused across the version matrix in CI.
+########################################################################
+
+services:
+  greenmail:
+    image: greenmail/standalone:2.1.9
+    environment:
+      # Defaults already include -Dgreenmail.setup.test.all and
+      # -Dgreenmail.auth.disabled (any user/password is accepted and the
+      # mailbox is created on first use) - we only add verbose logging,
+      # which is invaluable when a test fails and you need to see what
+      # actually hit the SMTP/IMAP socket.
+      JAVA_OPTS: -Dgreenmail.verbose
+    ports:
+      - "3025:3025" # SMTP
+      - "3143:3143" # IMAP
+    # No in-container healthcheck: the image is based on a bare JRE
+    # (azul/zulu-openjdk), with no guaranteed bash/nc/curl to run one
+    # with. Readiness is instead polled from the host via
+    # wait-for-stack.sh, which only needs tools we know the runner has.
+
+  roundcube:
+    image: roundcube/roundcubemail:${ROUNDCUBE_TAG:-1.7.x-apache}
+    depends_on:
+      - greenmail
+    environment:
+      ROUNDCUBEMAIL_DEFAULT_HOST: greenmail
+      ROUNDCUBEMAIL_DEFAULT_PORT: 3143
+      ROUNDCUBEMAIL_SMTP_SERVER: greenmail
+      ROUNDCUBEMAIL_SMTP_PORT: 3025
+      ROUNDCUBEMAIL_PLUGINS: clacks_overhead
+      # SQLite (the image default) is fine here - state doesn't need to
+      # survive a `down -v`, every run starts from a clean slate.
+    volumes:
+      - ../../clacks_overhead.php:/var/www/html/plugins/clacks_overhead/clacks_overhead.php:ro
+      - ../../clacks_overhead.js:/var/www/html/plugins/clacks_overhead/clacks_overhead.js:ro
+      - ../../skins/elastic/clacks_overhead.css:/var/www/html/plugins/clacks_overhead/skins/elastic/clacks_overhead.css:ro
+      - ../../skins/larry/clacks_overhead.css:/var/www/html/plugins/clacks_overhead/skins/larry/clacks_overhead.css:ro
+    ports:
+      - "8080:80"
+    # Same reasoning as greenmail above - no in-container healthcheck.

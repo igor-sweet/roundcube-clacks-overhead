@@ -1,0 +1,6 @@
+/vendor/
+/composer.lock
+/tests/e2e/.env
+/tests/e2e/playwright/node_modules/
+/tests/e2e/playwright/playwright-report/
+/tests/e2e/playwright/test-results/

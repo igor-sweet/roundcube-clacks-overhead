@@ -37,6 +37,6 @@ if (window.rcmail) {
         }
 
         tick();
-        setInterval(tick, 350);
+        setInterval(tick, 1000);
     });
 }

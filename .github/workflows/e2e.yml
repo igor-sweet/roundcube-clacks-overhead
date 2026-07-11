@@ -1,0 +1,93 @@
+name: E2E Tests
+
+# Full browser + mailbox integration test. Deliberately scoped to PRs
+# against main rather than every push/PR - it spins up two containers
+# and a headless browser per Roundcube version, which is far slower than
+# the syntax/unit jobs and isn't needed on every intermediate commit.
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        roundcube_tag:
+          - '1.6.x-apache'  # last maintained 1.6 line - confirmed on Docker Hub
+          - '1.7.x-apache'  # current stable line - confirmed on Docker Hub
+          - 'latest-apache' # always-current stable - confirmed on Docker Hub
+          - 'nightly'       # git master build, early warning for breaking
+                             # changes - confirmed tag exists, but listed
+                             # without a "-apache" suffix on Docker Hub, so
+                             # double-check it boots the same way before
+                             # relying on it (continue-on-error below just
+                             # in case it's a different image shape)
+
+    name: E2E on Roundcube ${{ matrix.roundcube_tag }}
+    continue-on-error: ${{ matrix.roundcube_tag == 'nightly' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install swaks
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq swaks
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: tests/e2e/playwright/package-lock.json
+
+      - name: Install Playwright project
+        working-directory: tests/e2e/playwright
+        run: npm ci
+
+      - name: Install Playwright browsers
+        working-directory: tests/e2e/playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Start GreenMail + Roundcube
+        working-directory: tests/e2e
+        env:
+          ROUNDCUBE_TAG: ${{ matrix.roundcube_tag }}
+        run: docker compose up -d
+
+      - name: Wait for stack to be ready
+        working-directory: tests/e2e
+        run: ./wait-for-stack.sh
+
+      - name: Run E2E tests
+        working-directory: tests/e2e/playwright
+        env:
+          ROUNDCUBE_BASE_URL: http://localhost:8080
+          TEST_USER: tester@example.test
+          TEST_PASS: testpass
+          GREENMAIL_SMTP_HOST: localhost
+          GREENMAIL_SMTP_PORT: 3025
+          GREENMAIL_IMAP_HOST: localhost
+          GREENMAIL_IMAP_PORT: 3143
+        run: npx playwright test
+
+      - name: Dump container logs on failure
+        if: failure()
+        working-directory: tests/e2e
+        run: docker compose logs
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ matrix.roundcube_tag }}
+          path: tests/e2e/playwright/playwright-report/
+          retention-days: 7
+
+      - name: Tear down stack
+        if: always()
+        working-directory: tests/e2e
+        run: docker compose down -v
