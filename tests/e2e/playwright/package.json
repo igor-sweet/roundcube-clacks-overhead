@@ -1,0 +1,16 @@
+{
+  "name": "clacks-overhead-e2e",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "imapflow": "^1.4.6"
+  },
+  "dependencies": {
+    "@types/node": "^26.1.1",
+    "typescript": "^7.0.2"
+  }
+}
