@@ -1,10 +1,15 @@
 # Roundcube Clacks Overhead Plugin
 
+[![PHP Syntax Check](https://github.com/igor-sweet/roundcube-clacks-overhead/actions/workflows/syntax.yml/badge.svg)](https://github.com/igor-sweet/roundcube-clacks-overhead/actions/workflows/syntax.yml)
+[![Unit Tests](https://github.com/igor-sweet/roundcube-clacks-overhead/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/igor-sweet/roundcube-clacks-overhead/actions/workflows/unit-tests.yml)
+[![E2E Tests](https://github.com/igor-sweet/roundcube-clacks-overhead/actions/workflows/e2e.yml/badge.svg)](https://github.com/igor-sweet/roundcube-clacks-overhead/actions/workflows/e2e.yml)
+[![Release](https://github.com/igor-sweet/roundcube-clacks-overhead/actions/workflows/release.yml/badge.svg)](https://github.com/igor-sweet/roundcube-clacks-overhead/actions/workflows/release.yml)
+
 Roundcube plugin that adds the `X-Clacks-Overhead: GNU Terry Pratchett` header 
 to all outgoing mail sent via Roundcube. Once enabled, this plugin needs no 
 configuration.
 
-See [GNU Terry Pratchett](http://www.gnuterrypratchett.com/) for more plugins 
+See [GNU Terry Pratchett](https://www.gnuterrypratchett.com/) for more plugins 
 for other software as well as background information to this plugin.
 
 ---

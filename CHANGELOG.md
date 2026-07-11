@@ -1,6 +1,23 @@
 # Changelog
 
+## [0.5]
+### Added
+- `scripts/build-release.sh` and `scripts/extract-changelog-section.sh`: release packaging and changelog-section extraction, pulled out of the release workflow so what ships in a release is visible and runnable locally, not only readable inside CI YAML
+- CI status badges in the README
+
+### Changed
+- **The release workflow's test gate is now actually functional.** v0.4 was tagged with a `release.yml` whose `release` job declared `needs: [syntax, phpunit, compatibility, e2e]` - but those job names didn't exist anywhere in that workflow file (`needs:` can only reference jobs defined in the *same* file; the real jobs lived in `unit-tests.yml`/`e2e.yml`). In practice this meant the dependency was broken, so v0.4 could have been published without its tests actually passing. Fixed by turning `syntax.yml`, `unit-tests.yml`, and `e2e.yml` into reusable workflows (`workflow_call`) that `release.yml` now genuinely calls and depends on.
+- Release notes now link back to the CI run that validated the release, and only include the changelog section for that specific version instead of the entire file
+
+### Fixed
+- `storage_init()` no longer appends `X-Clacks-Overhead` to `fetch_headers` if it's already present, avoiding a duplicated header request
+- The header value is now length-capped *before* being regex-filtered, not just after, and a null `preg_replace()` result (a PCRE-level failure) is handled explicitly instead of being passed on
+- Links to gnuterrypratchett.com now use `https://`
+
 ## [0.4]
+### Known issue
+- The release workflow's test gate did not actually work (see the "Changed" entry under 0.5) - this version's release process did not verify that tests passed before publishing. No problems were found in the plugin code itself as a result, but the gate itself should not be trusted for this tag.
+
 ### Added
 - Allow-list sanitization of incoming `X-Clacks-Overhead` header values: only ASCII letters, digits, spaces, and everyday punctuation are kept, and the value is capped at 100 characters. Guards against Unicode homoglyphs, bidi override characters, and other display-spoofing content that HTML escaping alone doesn't address
 - PHPUnit test suite covering hook wiring, header sanitization, and output escaping (`tests/unit/`)

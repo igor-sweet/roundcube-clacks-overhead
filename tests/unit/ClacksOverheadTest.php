@@ -80,6 +80,15 @@ final class ClacksOverheadTest extends TestCase
         $this->assertSame('X-Priority X-Clacks-Overhead', $result['fetch_headers']);
     }
 
+    public function testStorageInitDoesNotDuplicateHeaderIfAlreadyRequested(): void
+    {
+        $plugin = new clacks_overhead();
+
+        $result = $plugin->storage_init(['fetch_headers' => 'X-Priority X-Clacks-Overhead']);
+
+        $this->assertSame('X-Priority X-Clacks-Overhead', $result['fetch_headers']);
+    }
+
     // -- message_load() + message_summary() (incoming display) ------------
 
     public function testMessageSummaryShowsWidgetWhenHeaderPresent(): void
@@ -199,6 +208,24 @@ final class ClacksOverheadTest extends TestCase
     {
         $plugin = new clacks_overhead();
         $plugin->message_load(['object' => new fake_incoming_message(str_repeat('A', 500))]);
+
+        $args = $plugin->message_summary(['content' => '']);
+        $title = $this->extractTitleAttribute($args['content']);
+
+        $this->assertSame(100, strlen($title));
+    }
+
+    /**
+     * The raw input is now capped (at 1000 chars) *before* preg_replace()
+     * runs, not just the filtered result afterwards - this asserts an
+     * extreme input still ends up correctly capped at 100, i.e. the
+     * pre-filter cap doesn't accidentally corrupt or bypass the final
+     * length limit.
+     */
+    public function testMessageSummaryCapsExtremelyLongHeaderValue(): void
+    {
+        $plugin = new clacks_overhead();
+        $plugin->message_load(['object' => new fake_incoming_message(str_repeat('A', 50000))]);
 
         $args = $plugin->message_summary(['content' => '']);
         $title = $this->extractTitleAttribute($args['content']);

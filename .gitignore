@@ -4,3 +4,7 @@
 /tests/e2e/playwright/node_modules/
 /tests/e2e/playwright/playwright-report/
 /tests/e2e/playwright/test-results/
+.DS_Store
+/clacks_overhead-*.zip
+/clacks_overhead-*.tar.gz
+/release-notes.md

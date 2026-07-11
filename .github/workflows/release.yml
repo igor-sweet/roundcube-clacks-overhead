@@ -6,29 +6,21 @@ on:
       - 'v*'
 
 jobs:
+  # Reusable-workflow calls, not duplicated job definitions - each of
+  # these files is also its own independently triggered workflow (see
+  # their own `on:` blocks). `needs:` below can only reference job names
+  # defined in *this* file, which is exactly what these three are.
   syntax:
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/syntax.yml
 
-    strategy:
-      matrix:
-        php: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4', '8.5']
+  unit-tests:
+    uses: ./.github/workflows/unit-tests.yml
 
-    name: PHP ${{ matrix.php }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-
-      - name: Syntax Check
-        run: php -l clacks_overhead.php
+  e2e:
+    uses: ./.github/workflows/e2e.yml
 
   release:
-    needs: syntax
+    needs: [syntax, unit-tests, e2e]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -42,12 +34,15 @@ jobs:
         run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
 
       - name: Build release archives
+        run: ./scripts/build-release.sh "${{ steps.version.outputs.VERSION }}"
+
+      - name: Build release notes
         run: |
-          mkdir -p clacks_overhead
-          cp clacks_overhead.php composer.json LICENSE README.md CHANGELOG.md clacks_overhead.js clacks_overhead/
-          cp -r skins clacks_overhead/
-          zip -r clacks_overhead-${{ steps.version.outputs.VERSION }}.zip clacks_overhead/
-          tar -czf clacks_overhead-${{ steps.version.outputs.VERSION }}.tar.gz clacks_overhead/
+          {
+            echo "✅ All checks passed for this release - [view the test run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})."
+            echo
+            ./scripts/extract-changelog-section.sh "${{ steps.version.outputs.VERSION }}"
+          } > release-notes.md
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -56,4 +51,4 @@ jobs:
             clacks_overhead-${{ steps.version.outputs.VERSION }}.zip
             clacks_overhead-${{ steps.version.outputs.VERSION }}.tar.gz
           generate_release_notes: false
-          body_path: CHANGELOG.md
+          body_path: release-notes.md

@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  xsi:noNamespaceSchemaLocation points at the 10.5 schema even though
+  composer.json allows PHPUnit ^9.6 for PHP 7.4/8.0 (PHPUnit 10.5 itself
+  requires PHP >=8.1). This is intentional, not a mismatch to "fix":
+  that attribute is only an editor/IDE hint for autocomplete - PHPUnit
+  validates this file at runtime against its own bundled schema
+  regardless of what URL is written here (confirmed when upgrading:
+  PHPUnit 9.6 correctly rejected `failOnDeprecation`, a 10.x-only
+  attribute, even with this same 10.5 URL still in place). Pointing it
+  at whichever version most contributors are likely to have installed
+  locally is more useful than picking one arbitrarily.
+-->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
          bootstrap="tests/unit/bootstrap.php"

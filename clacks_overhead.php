@@ -5,9 +5,9 @@
  * outgoing mail, and display an animated Clacks tower indicator when
  * receiving mail that carries the header.
  *
- * @version 0.4
+ * @version 0.5
  * @since 0.1
- * @see http://www.gnuterrypratchett.com/
+ * @see https://www.gnuterrypratchett.com/
  * @author Martin Porcheron
  * @author (modernization & display feature) igor-sweet
  */
@@ -42,7 +42,18 @@ class clacks_overhead extends rcube_plugin
 
     public function storage_init(array $args): array
     {
-        $args['fetch_headers'] = trim(($args['fetch_headers'] ?? '') . ' X-Clacks-Overhead');
+        $existing = $args['fetch_headers'] ?? '';
+
+        // Guard against duplicating the header if something else already
+        // requested it - a future Roundcube core change, another plugin,
+        // or this hook firing more than once could otherwise all lead to
+        // "X-Clacks-Overhead X-Clacks-Overhead" being requested twice.
+        // Harmless functionally, but pointless and easy to avoid.
+        if (stripos($existing, 'X-Clacks-Overhead') !== false) {
+            return $args;
+        }
+
+        $args['fetch_headers'] = trim($existing . ' X-Clacks-Overhead');
         return $args;
     }
 
@@ -80,7 +91,23 @@ class clacks_overhead extends rcube_plugin
      */
     private function sanitize_clacks_value(string $value): string
     {
+        // Cap the *raw* input before filtering, not just the final result.
+        // Filtering first would mean an attacker-controlled header of
+        // several MB still gets fully scanned character-by-character
+        // before ever being truncated - pointless memory/CPU work for a
+        // value that's going to be cut down to 100 chars regardless.
+        $value = mb_substr($value, 0, 1000);
+
         $filtered = preg_replace('/[^A-Za-z0-9 .,;:!\'"()&-]/', '', $value);
+
+        // preg_replace() returns null on a PCRE-level failure (e.g. the
+        // backtrack/recursion limit) rather than throwing - treat that
+        // the same as "nothing usable came through" instead of passing
+        // null into mb_substr()/trim(), which would be a type error.
+        if ($filtered === null) {
+            return '';
+        }
+
         return trim(mb_substr($filtered, 0, 100));
     }
 
