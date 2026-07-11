@@ -43,7 +43,7 @@ async function openMessage(page: Page, subject: string): Promise<FrameLocator> {
 }
 
 test.describe('incoming mail - widget display', () => {
-  test('mail WITHOUT the header shows no widget (negative test)', async ({ page }) => {
+  test('mail WITHOUT the header shows no widget (negative test)', async ({ page }, testInfo) => {
     const subject = injectFixture('negative');
     await login(page, TEST_USER, TEST_PASS);
     const frame = await openMessage(page, subject);
@@ -54,6 +54,14 @@ test.describe('incoming mail - widget display', () => {
     await expect(frame.locator('#message-header')).toContainText(subject);
 
     await expect(frame.locator('.clacks-overhead')).toHaveCount(0);
+
+    // Documentation screenshot: expected behaviour with no header present.
+    // Attached explicitly (not via the automatic only-on-failure setting)
+    // so it shows up in the HTML report on a green run too.
+    await testInfo.attach('no-widget-without-header', {
+      body: await page.screenshot({ fullPage: true }),
+      contentType: 'image/png',
+    });
 
     // Double-check at the IMAP/wire level: the widget being absent in the
     // UI could in principle also mean storage_init()/message_load() failed
@@ -70,7 +78,7 @@ test.describe('incoming mail - widget display', () => {
     expect(rawHeaders).not.toMatch(/X-Clacks-Overhead/i);
   });
 
-  test('mail WITH the header shows the widget (positive test)', async ({ page }) => {
+  test('mail WITH the header shows the widget (positive test)', async ({ page }, testInfo) => {
     const subject = injectFixture('positive');
     await login(page, TEST_USER, TEST_PASS);
     const frame = await openMessage(page, subject);
@@ -78,6 +86,13 @@ test.describe('incoming mail - widget display', () => {
     const widget = frame.locator('.clacks-overhead');
     await expect(widget).toHaveCount(1);
     await expect(widget).toHaveAttribute('title', /GNU Terry Pratchett/);
+
+    // Documentation screenshot: expected behaviour with the header
+    // present and the widget rendered.
+    await testInfo.attach('widget-visible-with-header', {
+      body: await page.screenshot({ fullPage: true }),
+      contentType: 'image/png',
+    });
   });
 
   test('whitespace-only header is now correctly treated as absent (sanitizer fix)', async ({ page }) => {
@@ -116,7 +131,7 @@ test.describe('incoming mail - widget display', () => {
     await expect(frame.locator('.clacks-overhead')).toHaveCount(1);
   });
 
-  test('widget stays visible when toggling the header details view', async ({ page }) => {
+  test('widget stays visible when toggling the header details view', async ({ page }, testInfo) => {
     const subject = injectFixture('positive');
     await login(page, TEST_USER, TEST_PASS);
     const frame = await openMessage(page, subject);
@@ -135,12 +150,24 @@ test.describe('incoming mail - widget display', () => {
     // .header-links is always the toggle, whichever state it's in.
     const widget = frame.locator('.clacks-overhead');
     await expect(widget).toBeVisible();
+    await testInfo.attach('widget-before-toggle', {
+      body: await page.screenshot({ fullPage: true }),
+      contentType: 'image/png',
+    });
 
     const toggleLink = frame.locator('.header-links a').first();
     await toggleLink.click();
     await expect(widget).toBeVisible();
+    await testInfo.attach('widget-after-first-toggle', {
+      body: await page.screenshot({ fullPage: true }),
+      contentType: 'image/png',
+    });
 
     await toggleLink.click();
     await expect(widget).toBeVisible();
+    await testInfo.attach('widget-after-second-toggle', {
+      body: await page.screenshot({ fullPage: true }),
+      contentType: 'image/png',
+    });
   });
 });
