@@ -56,13 +56,17 @@ jobs:
         working-directory: tests/e2e
         env:
           ROUNDCUBE_TAG: ${{ matrix.roundcube_tag }}
-        run: docker compose up -d --wait
+        run: docker compose up -d
+
+      - name: Wait for stack to be ready
+        working-directory: tests/e2e
+        run: ./wait-for-stack.sh
 
       - name: Run E2E tests
         working-directory: tests/e2e/playwright
         env:
           ROUNDCUBE_BASE_URL: http://localhost:8080
-          TEST_USER: tester@localhost
+          TEST_USER: tester@example.test
           TEST_PASS: testpass
           GREENMAIL_SMTP_HOST: localhost
           GREENMAIL_SMTP_PORT: 3025

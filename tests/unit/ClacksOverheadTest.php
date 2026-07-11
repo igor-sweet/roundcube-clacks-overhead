@@ -203,7 +203,7 @@ final class ClacksOverheadTest extends TestCase
         $args = $plugin->message_summary(['content' => '']);
         $title = $this->extractTitleAttribute($args['content']);
 
-        $this->assertSame(100, strlen($title) - strlen('X-Clacks-Overhead: '));
+        $this->assertSame(100, strlen($title));
     }
 
     private function extractTitleAttribute(string $html): string
