@@ -12,7 +12,13 @@ export default defineConfig({
   // ambiguous element matches, but there's no benefit to parallelizing
   // a suite this size against a single external stateful system anyway.
   workers: 1,
-  reporter: process.env.CI ? [['github'], ['list']] : 'list',
+  // 'github' annotates PR checks, 'list' gives readable terminal output -
+  // neither one writes an HTML report to disk. 'html' is what actually
+  // creates the playwright-report/ directory the e2e.yml workflow uploads
+  // as an artifact; without it the upload step finds nothing.
+  reporter: process.env.CI
+    ? [['github'], ['list'], ['html', { open: 'never' }]]
+    : 'list',
   use: {
     baseURL: process.env.ROUNDCUBE_BASE_URL || 'http://localhost:8080',
     screenshot: 'only-on-failure',
