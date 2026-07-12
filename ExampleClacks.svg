@@ -1,0 +1,19 @@
+<svg viewBox="0 0 66 50" width="132" height="100" xmlns="http://www.w3.org/2000/svg">
+  <!-- G: 11/01/00 -->
+  <rect x="0"  y="0"  width="10" height="10" rx="1" fill="#f5c842" />
+  <rect x="12" y="0"  width="10" height="10" rx="1" fill="#f5c842" />
+  <rect x="0"  y="12" width="10" height="10" rx="1" fill="#555555" />
+  <rect x="12" y="12" width="10" height="10" rx="1" fill="#f5c842" />
+  <rect x="0"  y="24" width="10" height="10" rx="1" fill="#555555" />
+  <rect x="12" y="24" width="10" height="10" rx="1" fill="#555555" />
+  <text x="11" y="44" font-size="9" font-family="monospace" fill="#888888" text-anchor="middle">G</text>
+
+  <!-- SPACE: 00/00/10 -->
+  <rect x="44" y="0"  width="10" height="10" rx="1" fill="#555555" />
+  <rect x="56" y="0"  width="10" height="10" rx="1" fill="#555555" />
+  <rect x="44" y="12" width="10" height="10" rx="1" fill="#555555" />
+  <rect x="56" y="12" width="10" height="10" rx="1" fill="#555555" />
+  <rect x="44" y="24" width="10" height="10" rx="1" fill="#f5c842" />
+  <rect x="56" y="24" width="10" height="10" rx="1" fill="#555555" />
+  <text x="55" y="44" font-size="9" font-family="monospace" fill="#888888" text-anchor="middle">·</text>
+</svg>
