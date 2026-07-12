@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased]
+### Fixed
+- The animated indicator no longer uses `charCodeAt(0) & 0x3F` to derive panel patterns. That bit-mask collided on 20 of the 74 characters the sanitizer allows (e.g. "p"/"0" and "a"/"!" produced identical panel patterns) - it's replaced with the real, verified collision-free semaphore table used by the original x-clacks-overhead browser extension, extended with our own digit/punctuation patterns (see README.md "Semaphore encoding")
+
+### Added
+- Panel patterns for digits and everyday punctuation, so the indicator can render the full character set `sanitize_clacks_value()` allows, not just A-Z and space
+- A reserved pair of control-marker patterns that bracket a `GNU`-prefixed header value, distinguishing the Discworld Overhead's G/N/U operator code from three ordinary letters (display-only; does not affect the header value or its sanitization)
+
 ## [0.5]
 ### Added
 - `scripts/build-release.sh` and `scripts/extract-changelog-section.sh`: release packaging and changelog-section extraction, pulled out of the release workflow so what ships in a release is visible and runnable locally, not only readable inside CI YAML
