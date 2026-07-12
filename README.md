@@ -63,28 +63,9 @@ and a glowing amber when on, small rounded 10×10px tiles with a 2px
 gap, closer to a lit shutter than a checkerboard. To scale, in the
 real colors, "G" and a space look like this:
 
-<div style="text-align: center;">
-
-<svg viewBox="0 0 66 50" width="132" height="100" xmlns="http://www.w3.org/2000/svg">
-  <!-- G: 11/01/00 -->
-  <rect x="0"  y="0"  width="10" height="10" rx="1" fill="#f5c842" />
-  <rect x="12" y="0"  width="10" height="10" rx="1" fill="#f5c842" />
-  <rect x="0"  y="12" width="10" height="10" rx="1" fill="#555555" />
-  <rect x="12" y="12" width="10" height="10" rx="1" fill="#f5c842" />
-  <rect x="0"  y="24" width="10" height="10" rx="1" fill="#555555" />
-  <rect x="12" y="24" width="10" height="10" rx="1" fill="#555555" />
-  <text x="11" y="44" font-size="9" font-family="monospace" fill="#888888" text-anchor="middle">G</text>
-
-  <!-- SPACE: 00/00/10 -->
-  <rect x="44" y="0"  width="10" height="10" rx="1" fill="#555555" />
-  <rect x="56" y="0"  width="10" height="10" rx="1" fill="#555555" />
-  <rect x="44" y="12" width="10" height="10" rx="1" fill="#555555" />
-  <rect x="56" y="12" width="10" height="10" rx="1" fill="#555555" />
-  <rect x="44" y="24" width="10" height="10" rx="1" fill="#f5c842" />
-  <rect x="56" y="24" width="10" height="10" rx="1" fill="#555555" />
-  <text x="55" y="44" font-size="9" font-family="monospace" fill="#888888" text-anchor="middle">·</text>
-</svg>
-</div>
+<!-- SVG-BEGIN -->
+<svg xmlns="http://www.w3.org/2000/svg" width="132" height="100" viewBox="0 0 66 50"><rect width="10" height="10" fill="#f5c842" rx="1"/><rect width="10" height="10" x="12" fill="#f5c842" rx="1"/><rect width="10" height="10" y="12" fill="#555" rx="1"/><rect width="10" height="10" x="12" y="12" fill="#f5c842" rx="1"/><rect width="10" height="10" y="24" fill="#555" rx="1"/><rect width="10" height="10" x="12" y="24" fill="#555" rx="1"/><text x="11" y="44" fill="#888" font-family="monospace" font-size="9" text-anchor="middle">G</text><rect width="10" height="10" x="44" fill="#555" rx="1"/><rect width="10" height="10" x="56" fill="#555" rx="1"/><rect width="10" height="10" x="44" y="12" fill="#555" rx="1"/><rect width="10" height="10" x="56" y="12" fill="#555" rx="1"/><rect width="10" height="10" x="44" y="24" fill="#f5c842" rx="1"/><rect width="10" height="10" x="56" y="24" fill="#555" rx="1"/><text x="55" y="44" fill="#888" font-family="monospace" font-size="9" text-anchor="middle">·</text></svg>
+<!-- SVG-END -->
 
 (Full-color animated screenshots of the widget in context are already
 produced by the E2E suite - see the Playwright test report artifact
