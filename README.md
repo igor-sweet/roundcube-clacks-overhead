@@ -64,7 +64,7 @@ gap, closer to a lit shutter than a checkerboard. To scale, in the
 real colors, "G" and a space look like this:
 
 <p>
-<svg viewBox="0 0 66 50" width="132" height="100" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 66 50" width="132" height="100" xmlns="http://www.w3.org/2000/svg" role="img">
   <!-- G: 11/01/00 -->
   <rect x="0"  y="0"  width="10" height="10" rx="1" fill="#f5c842" />
   <rect x="12" y="0"  width="10" height="10" rx="1" fill="#f5c842" />
