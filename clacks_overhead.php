@@ -5,7 +5,7 @@
  * outgoing mail, and display an animated Clacks tower indicator when
  * receiving mail that carries the header.
  *
- * @version 0.5
+ * @version 0.6
  * @since 0.1
  * @see https://www.gnuterrypratchett.com/
  * @author Martin Porcheron

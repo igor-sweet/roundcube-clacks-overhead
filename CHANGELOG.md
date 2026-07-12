@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [0.6]
 ### Fixed
 - The animated indicator no longer uses `charCodeAt(0) & 0x3F` to derive panel patterns. That bit-mask collided on 20 of the 74 characters the sanitizer allows (e.g. "p"/"0" and "a"/"!" produced identical panel patterns) - it's replaced with the real, verified collision-free semaphore table used by the original x-clacks-overhead browser extension, extended with our own digit/punctuation patterns (see README.md "Semaphore encoding")
 
