@@ -63,6 +63,8 @@ and a glowing amber when on, small rounded 10×10px tiles with a 2px
 gap, closer to a lit shutter than a checkerboard. To scale, in the
 real colors, "G" and a space look like this:
 
+<div style="text-align: center;">
+
 <svg viewBox="0 0 66 50" width="132" height="100" xmlns="http://www.w3.org/2000/svg">
   <!-- G: 11/01/00 -->
   <rect x="0"  y="0"  width="10" height="10" rx="1" fill="#f5c842" />
@@ -82,7 +84,7 @@ real colors, "G" and a space look like this:
   <rect x="56" y="24" width="10" height="10" rx="1" fill="#555555" />
   <text x="55" y="44" font-size="9" font-family="monospace" fill="#888888" text-anchor="middle">·</text>
 </svg>
-
+</div>
 
 (Full-color animated screenshots of the widget in context are already
 produced by the E2E suite - see the Playwright test report artifact
