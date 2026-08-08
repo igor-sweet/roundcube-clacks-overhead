@@ -44,7 +44,7 @@ async function openMessage(page: Page, subject: string): Promise<FrameLocator> {
 
 test.describe('incoming mail - widget display', () => {
   test('mail WITHOUT the header shows no widget (negative test)', async ({ page }, testInfo) => {
-    const subject = injectFixture('negative');
+    const { subject } = injectFixture('negative');
     await login(page, TEST_USER, TEST_PASS);
     const frame = await openMessage(page, subject);
 
@@ -79,7 +79,7 @@ test.describe('incoming mail - widget display', () => {
   });
 
   test('mail WITH the header shows the widget (positive test)', async ({ page }, testInfo) => {
-    const subject = injectFixture('positive');
+    const { subject } = injectFixture('positive');
     await login(page, TEST_USER, TEST_PASS);
     const frame = await openMessage(page, subject);
 
@@ -96,7 +96,7 @@ test.describe('incoming mail - widget display', () => {
   });
 
   test('whitespace-only header is now correctly treated as absent (sanitizer fix)', async ({ page }) => {
-    const subject = injectFixture('whitespace');
+    const { subject } = injectFixture('whitespace');
     await login(page, TEST_USER, TEST_PASS);
     const frame = await openMessage(page, subject);
 
@@ -109,7 +109,7 @@ test.describe('incoming mail - widget display', () => {
   });
 
   test('a quote/tag-breakout header value cannot inject a live DOM element', async ({ page }) => {
-    const subject = injectFixture('xss');
+    const { subject } = injectFixture('xss');
     await login(page, TEST_USER, TEST_PASS);
     const frame = await openMessage(page, subject);
 
@@ -132,7 +132,7 @@ test.describe('incoming mail - widget display', () => {
   });
 
   test('widget stays visible when toggling the header details view', async ({ page }, testInfo) => {
-    const subject = injectFixture('positive');
+    const { subject } = injectFixture('positive');
     await login(page, TEST_USER, TEST_PASS);
     const frame = await openMessage(page, subject);
 

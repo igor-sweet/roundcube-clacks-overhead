@@ -27,6 +27,7 @@ FILES_TO_PACKAGE=(
   LICENSE
   README.md
   CHANGELOG.md
+  ExampleClacks.svg
 )
 DIRS_TO_PACKAGE=(
   skins

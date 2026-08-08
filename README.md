@@ -111,9 +111,10 @@ Each cell below shows the 2×3 panel exactly as the widget renders it
 |---|---|---|---|
 | ⬛🔲<br>🔲🔲<br>⬛⬛ | ⬛🔲<br>🔲🔲<br>⬛🔲 | ⬛🔲<br>🔲🔲<br>🔲🔲 | 🔲⬛<br>⬛⬛<br>⬛⬛ |
 
-That's 48 characters plus a fully-blank state and the two control
-markers below - 51 of the 64 possible states, leaving 13 free for
-future use (see `clacks_overhead.js` for the exact bit values).
+That's 48 characters plus a fully-blank state, the END marker shown
+once at the end of every loop, and the two control markers below -
+52 of the 64 possible states, leaving 12 free for future use (see
+`clacks_overhead.js` for the exact bit values).
 
 ### GNU control-code marker
 

@@ -32,11 +32,13 @@ FROM_ADDR="sender@example.com"
 NONCE="$(date +%s%N 2>/dev/null || date +%s)-$$"
 
 declare -a ADD_HEADER_ARGS=()
+VALUE=""
 
 case "$FIXTURE" in
   positive)
     SUBJECT="Clacks E2E - positive - $NONCE"
-    ADD_HEADER_ARGS=(--add-header "X-Clacks-Overhead: GNU Terry Pratchett")
+    VALUE="GNU Terry Pratchett"
+    ADD_HEADER_ARGS=(--add-header "X-Clacks-Overhead: $VALUE")
     ;;
   negative)
     SUBJECT="Clacks E2E - negative - $NONCE"
@@ -44,11 +46,13 @@ case "$FIXTURE" in
     ;;
   whitespace)
     SUBJECT="Clacks E2E - whitespace-only header - $NONCE"
-    ADD_HEADER_ARGS=(--add-header "X-Clacks-Overhead:    ")
+    VALUE="   "
+    ADD_HEADER_ARGS=(--add-header "X-Clacks-Overhead:$VALUE")
     ;;
   xss)
     SUBJECT="Clacks E2E - xss header - $NONCE"
-    ADD_HEADER_ARGS=(--add-header 'X-Clacks-Overhead: "><img src=x onerror=window.__clacks_xss_fired=true>')
+    VALUE='"><img src=x onerror=window.__clacks_xss_fired=true>'
+    ADD_HEADER_ARGS=(--add-header "X-Clacks-Overhead: $VALUE")
     ;;
   *)
     echo "Unknown fixture '$FIXTURE'. Expected: positive | negative | whitespace | xss" >&2
@@ -68,6 +72,11 @@ swaks \
   --suppress-data
 
 echo "Fixture '$FIXTURE' delivered with subject: $SUBJECT"
-# Machine-readable line for callers (e.g. the Playwright wrapper) that
-# need the exact (nonce-suffixed) subject to search for afterwards.
+# Machine-readable lines for callers (e.g. the Playwright wrapper). Subject
+# is needed to find the mail again afterwards; value is the exact
+# X-Clacks-Overhead content that was sent (empty for 'negative', which
+# sends no header at all) - exposing it lets a caller derive expectations
+# (e.g. how many characters the widget should render) from what was
+# actually sent, instead of a second, independently hardcoded copy of it.
 echo "FIXTURE_SUBJECT=$SUBJECT"
+echo "FIXTURE_VALUE=$VALUE"

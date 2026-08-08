@@ -1,12 +1,26 @@
 # Changelog
 
+## [Unreleased]
+### Added
+- The animation now shows the reserved END pattern once after the last character, then pauses for 10 seconds before looping back to the start - the message has run the length of the line and is being turned around, rather than restarting instantly
+- `README.md` "Semaphore encoding" section: the full character table (shown as the actual on/off panel grid, not raw bit notation), what G/N/U mean in-universe, and where the panel visual style originally comes from
+- `ExampleClacks.svg`: a to-scale, real-color reference image (`#555`/`#f5c842`, matching `skins/*/clacks_overhead.css`) for the README - the character table itself stays black/white for plain-Markdown compatibility, so this fills in what the actual widget looks like
+- `tests/unit-js/`: Node-based unit tests (via the built-in `node:test` runner, no new dependency) for the panel-encoding table, `encodePattern()`, and `buildFrames()` - collision-freedom, the GNU bracket, and the mirrored-marker/END relationship are now regression-tested, not just manually verified
+- `tests/e2e/playwright/tests/animation.spec.ts`: an E2E test that uses Playwright's Clock API to pause real browser time once the message is loaded, then fast-forward through the animation and confirm the overhead brackets, the trailing END marker, and the loop restart actually render as designed - without waiting out the real ~58s cycle on every CI run. The expected message length is derived from the actual injected fixture value rather than hardcoded, so the test can't silently drift out of sync with the fixture it's testing against
+- `clacks_overhead.js`: a `data-clacks-animating` guard prevents a second animation loop from starting on the same widget if the plugin's `'init'` handler ever fires more than once for it
+- `clacks_overhead.js` exposes two small debug hooks on `window` (`__clacksOverheadInitCalls`, `__clacksOverheadDebug.nextDueAt`), used by the E2E test above to verify the guard and to keep its manual clock control in sync with the real animation loop. There's no build/minify step (see `scripts/build-release.sh`), so these ship as-is in every release - noted here for transparency rather than left as an undocumented surface
+
+### Changed
+- Animation timing: 850ms → 1750ms per character shown, 150ms → 250ms blank pulse between frames
+- `clacks_overhead.js`'s exported overhead-bracket constants are now named `OVERHEAD_START`/`OVERHEAD_END` (previously `STEUER_START`/`STEUER_END`), matching the terminology already used in README.md's "GNU control-code marker" section
+
 ## [0.6]
 ### Fixed
 - The animated indicator no longer uses `charCodeAt(0) & 0x3F` to derive panel patterns. That bit-mask collided on 20 of the 74 characters the sanitizer allows (e.g. "p"/"0" and "a"/"!" produced identical panel patterns) - it's replaced with the real, verified collision-free semaphore table used by the original x-clacks-overhead browser extension, extended with our own digit/punctuation patterns (see README.md "Semaphore encoding")
 
 ### Added
 - Panel patterns for digits and everyday punctuation, so the indicator can render the full character set `sanitize_clacks_value()` allows, not just A-Z and space
-- A reserved pair of control-marker patterns that bracket a `GNU`-prefixed header value, distinguishing the Discworld Overhead's G/N/U operator code from three ordinary letters (display-only; does not affect the header value or its sanitization)
+- A reserved, mirrored pair of control-marker patterns that brackets a `GNU`-prefixed header value, distinguishing the Discworld Overhead's G/N/U operator code from three ordinary letters (display-only; does not affect the header value or its sanitization)
 
 ## [0.5]
 ### Added
