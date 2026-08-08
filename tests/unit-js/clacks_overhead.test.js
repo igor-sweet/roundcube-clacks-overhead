@@ -16,8 +16,8 @@ const {
     PANEL_ENCODING,
     BLANK,
     END,
-    STEUER_START,
-    STEUER_END,
+    OVERHEAD_START,
+    OVERHEAD_END,
     encodePattern,
     buildFrames,
 } = require(path.join('..', '..', 'clacks_overhead.js'));
@@ -36,17 +36,17 @@ test('every character pattern is unique - no two characters render the same pane
     assert.equal(Object.keys(PANEL_ENCODING).length, 48);
 });
 
-test('BLANK, END, and the control markers do not collide with any character', () => {
+test('BLANK, END, and the overhead brackets do not collide with any character', () => {
     const charPatterns = new Set(Object.values(PANEL_ENCODING));
-    for (const reserved of [BLANK, END, ...STEUER_START, ...STEUER_END]) {
+    for (const reserved of [BLANK, END, ...OVERHEAD_START, ...OVERHEAD_END]) {
         assert.ok(!charPatterns.has(reserved), `reserved pattern ${reserved} collides with a character`);
     }
 });
 
-test('the control markers are a mirrored pair, and END is their bitwise OR', () => {
-    assert.deepEqual(STEUER_END, [...STEUER_START].reverse());
+test('the overhead brackets are a mirrored pair, and END is their bitwise OR', () => {
+    assert.deepEqual(OVERHEAD_END, [...OVERHEAD_START].reverse());
     // eslint-disable-next-line no-bitwise
-    assert.equal(STEUER_START[0] | STEUER_START[1], END);
+    assert.equal(OVERHEAD_START[0] | OVERHEAD_START[1], END);
 });
 
 test('encodePattern() is case-insensitive for letters, and passes digits/punctuation through as-is', () => {
@@ -65,7 +65,7 @@ test('encodePattern() falls back to BLANK for anything outside the allow-list', 
     assert.equal(encodePattern('\n'), BLANK);
 });
 
-test('buildFrames() brackets a GNU-prefixed value with mirrored control markers', () => {
+test('buildFrames() brackets a GNU-prefixed value with mirrored overhead markers', () => {
     const frames = buildFrames('GNU Terry Pratchett');
 
     const patterns = frames.map((f) => f.pattern);

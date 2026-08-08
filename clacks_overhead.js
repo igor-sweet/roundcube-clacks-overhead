@@ -1,7 +1,5 @@
 /**
  * Clacks Overhead — animated 2×3 panel display
-/**
- * Clacks Overhead — animated 2×3 panel display
  *
  * Real semaphore encoding (verified collision-free against the actual
  * x-clacks-overhead browser extension table, not the ad-hoc
