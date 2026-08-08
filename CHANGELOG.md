@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [0.7]
 ### Added
 - The animation now shows the reserved END pattern once after the last character, then pauses for 10 seconds before looping back to the start - the message has run the length of the line and is being turned around, rather than restarting instantly
 - `README.md` "Semaphore encoding" section: the full character table (shown as the actual on/off panel grid, not raw bit notation), what G/N/U mean in-universe, and where the panel visual style originally comes from
